@@ -2,6 +2,7 @@ module Api
   module V1
     class RegistrationsController < Api::V1::BaseController
       skip_before_action :set_current_user
+      skip_after_action :verify_authorized
 
       # POST /api/v1/registrations
       def create

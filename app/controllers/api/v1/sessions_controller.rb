@@ -1,6 +1,8 @@
 module Api
   module V1
     class SessionsController < Api::V1::BaseController
+      skip_after_action :verify_authorized
+
       # POST /api/v1/sessions
       def create
         begin
