@@ -24,7 +24,6 @@ module Api
         render json: { error_message: exception.message }, status: :not_found
       end
 
-      # Set '@skip_after_action' to true in rescue blocks which can be called before authorization has been run
       def skip_after_action
         @skip_after_action
       end
