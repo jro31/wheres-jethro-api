@@ -9,12 +9,14 @@ describe 'check_ins API', type: :request do
       let(:latitude_1) { 53.43666492 }
       let(:longitude_1) { -2.959829494 }
       let(:accuracy_1) { 12.556 }
-      let!(:check_in_1) { create(:check_in, name: name_1, description: description_1, latitude: latitude_1, longitude: longitude_1, accuracy: accuracy_1, created_at: 2.days.ago) }
+      let(:created_at_1) { 2.days.ago }
+      let!(:check_in_1) { create(:check_in, name: name_1, description: description_1, latitude: latitude_1, longitude: longitude_1, accuracy: accuracy_1, created_at: created_at_1) }
 
       let(:name_2) { 'Bangkok' }
       let(:latitude_2) { 13.7563 }
       let(:longitude_2) { 100.5018 }
-      let!(:check_in_2) { create(:check_in, name: name_2, description: nil, latitude: latitude_2, longitude: longitude_2, accuracy: nil, created_at: 1.day.ago) }
+      let(:created_at_2) { 1.day.ago }
+      let!(:check_in_2) { create(:check_in, name: name_2, description: nil, latitude: latitude_2, longitude: longitude_2, accuracy: nil, created_at: created_at_2) }
       it 'returns the check-ins' do
         get url
 
@@ -26,14 +28,16 @@ describe 'check_ins API', type: :request do
               'description' => nil,
               'latitude' => latitude_2,
               'longitude' => longitude_2,
-              'accuracy' => nil
+              'accuracy' => nil,
+              'datetime' => created_at_2.as_json
             },
             {
               'name' => name_1,
               'description' => description_1,
               'latitude' => latitude_1,
               'longitude' => longitude_1,
-              'accuracy' => accuracy_1
+              'accuracy' => accuracy_1,
+              'datetime' => created_at_1.as_json
             }
           ]
         })
@@ -53,6 +57,110 @@ describe 'check_ins API', type: :request do
   end
 
   describe 'POST /api/v1/check_ins' do
-    # TODO
+    let(:name) { 'Goodison Park' }
+    let(:description) { 'Theatre of tears' }
+    let(:latitude) { 53.43666492 }
+    let(:longitude) { -2.959829494 }
+    let(:accuracy) { 12.556 }
+    let(:url) { '/api/v1/check_ins' }
+    let(:params) { { check_in: { name: name, description: description, latitude: latitude, longitude: longitude, accuracy: accuracy } } }
+    let(:expected_return) {
+      {
+        'check_in' => {
+          'name' => name,
+          'description' => description,
+          'latitude' => latitude,
+          'longitude' => longitude,
+          'accuracy' => accuracy,
+          'datetime' => CheckIn.last.created_at.as_json
+        }
+      }
+    }
+    context 'user is logged-in' do
+      context 'user is permitted' do
+        include_context 'login'
+        context 'all fields are present' do
+          it 'creates a new check-in' do
+            expect { post url, params: params }.to change { CheckIn.count }.by(1)
+            expect(response).to have_http_status(:created)
+            expect(JSON.parse(response.body)).to eq(expected_return)
+          end
+        end
+
+        context 'name is not present' do
+          let(:params) { { check_in: { description: description, latitude: latitude, longitude: longitude, accuracy: accuracy } } }
+          it 'does not create a check-in' do
+            expect { post url, params: params }.to change { CheckIn.count }.by(0)
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(JSON.parse(response.body)).to eq({
+              'error_message' => 'Name can\'t be blank'
+            })
+          end
+        end
+
+        context 'description is not present' do
+          let(:description) { nil }
+          let(:params) { { check_in: { name: name, latitude: latitude, longitude: longitude, accuracy: accuracy } } }
+          it 'creates a new check-in' do
+            expect { post url, params: params }.to change { CheckIn.count }.by(1)
+            expect(response).to have_http_status(:created)
+            expect(JSON.parse(response.body)).to eq(expected_return)
+          end
+        end
+
+        context 'latitude is not present' do
+          let(:params) { { check_in: { name: name, description: description, longitude: longitude, accuracy: accuracy } } }
+          it 'does not create a check-in' do
+            expect { post url, params: params }.to change { CheckIn.count }.by(0)
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(JSON.parse(response.body)).to eq({
+              'error_message' => 'Latitude can\'t be blank'
+            })
+          end
+        end
+
+        context 'longitude is not present' do
+          let(:params) { { check_in: { name: name, description: description, latitude: latitude, accuracy: accuracy } } }
+          it 'does not create a check-in' do
+            expect { post url, params: params }.to change { CheckIn.count }.by(0)
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(JSON.parse(response.body)).to eq({
+              'error_message' => 'Longitude can\'t be blank'
+            })
+          end
+        end
+
+        context 'accuracy is not present' do
+          let(:accuracy) { nil }
+          let(:params) { { check_in: { name: name, description: description, latitude: latitude, longitude: longitude } } }
+          it 'creates a new check-in' do
+            expect { post url, params: params }.to change { CheckIn.count }.by(1)
+            expect(response).to have_http_status(:created)
+            expect(JSON.parse(response.body)).to eq(expected_return)
+          end
+        end
+      end
+
+      context 'user is not permitted' do
+        include_context 'login_imposter'
+        it 'does not create a check-in' do
+          expect { post url, params: params }.to change { CheckIn.count }.by(0)
+          expect(response).to have_http_status(:unauthorized)
+          expect(JSON.parse(response.body)).to eq({
+            'error_message' => 'Unauthorized CheckInPolicy.create?'
+          })
+        end
+      end
+    end
+
+    context 'user is not logged-in' do
+      it 'does not create a check-in' do
+        expect { post url, params: params }.to change { CheckIn.count }.by(0)
+        expect(response).to have_http_status(:unauthorized)
+        expect(JSON.parse(response.body)).to eq({
+          'error_message' => 'Unauthorized CheckInPolicy.create?'
+        })
+      end
+    end
   end
 end

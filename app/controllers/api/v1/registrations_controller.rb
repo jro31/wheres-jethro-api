@@ -1,3 +1,5 @@
+# TODO - Remove this
+
 module Api
   module V1
     class RegistrationsController < Api::V1::BaseController

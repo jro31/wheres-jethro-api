@@ -18,7 +18,32 @@ module Api
 
       # POST /api/v1/check_ins
       def create
-        # TODO
+        begin
+          @check_in = CheckIn.new(check_in_params)
+          authorize @check_in
+
+          @check_in.save!
+
+          render json: {
+            check_in: CheckInRepresenter.new(@check_in).as_json
+          }, status: :created
+        rescue Pundit::NotAuthorizedError
+          super
+        rescue ActiveRecord::RecordInvalid => e
+          render json: {
+            error_message: e.message.split(':')&.last&.strip || 'Something went wrong'
+          }, status: :unprocessable_entity
+        rescue => e
+          render json: {
+            error_message: e.message
+          }, status: :unprocessable_entity
+        end
+      end
+
+      private
+
+      def check_in_params
+        params.require(:check_in).permit(:name, :description, :latitude, :longitude, :accuracy)
       end
     end
   end

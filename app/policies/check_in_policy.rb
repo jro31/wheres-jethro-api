@@ -6,6 +6,6 @@ class CheckInPolicy < ApplicationPolicy
   end
 
   def create?
-    false # TODO - Update this
+    !!user && user.id == 1
   end
 end

@@ -4,15 +4,7 @@ class CheckInsRepresenter
   end
 
   def as_json
-    check_ins.map do |check_in|
-      {
-        name: check_in.name,
-        description: check_in.description,
-        latitude: check_in.latitude,
-        longitude: check_in.longitude,
-        accuracy: check_in.accuracy
-      }
-    end
+    check_ins.map { |check_in| CheckInRepresenter.new(check_in).as_json }
   end
 
   private
