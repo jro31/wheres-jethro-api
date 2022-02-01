@@ -25,6 +25,7 @@ describe 'check_ins API', type: :request do
         expect(JSON.parse(response.body)).to eq({
           'check_ins' => [
             {
+              'id' => check_in_2.id,
               'name' => name_2,
               'description' => nil,
               'latitude' => latitude_2,
@@ -34,6 +35,7 @@ describe 'check_ins API', type: :request do
               'datetime' => created_at_2.as_json
             },
             {
+              'id' => check_in_1.id,
               'name' => name_1,
               'description' => description_1,
               'latitude' => latitude_1,
@@ -71,6 +73,7 @@ describe 'check_ins API', type: :request do
     let(:expected_return) {
       {
         'check_in' => {
+          'id' => CheckIn.last.id,
           'name' => name,
           'description' => description,
           'latitude' => latitude,

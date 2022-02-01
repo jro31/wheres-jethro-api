@@ -5,6 +5,7 @@ class CheckInRepresenter
 
   def as_json
     {
+      id: check_in.id,
       name: check_in.name,
       description: check_in.description,
       latitude: check_in.latitude,

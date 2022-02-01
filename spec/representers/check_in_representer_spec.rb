@@ -14,6 +14,7 @@ describe CheckInRepresenter do
     it 'returns the correct hash' do
       expect(subject).to eq(
         {
+          id: check_in.id,
           name: name,
           description: description,
           latitude: latitude,

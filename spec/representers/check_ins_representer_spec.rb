@@ -21,6 +21,7 @@ describe CheckInsRepresenter do
       expect(subject).to eq(
         [
           {
+            id: check_in_2.id,
             name: name_2,
             description: nil,
             latitude: latitude_2,
@@ -30,6 +31,7 @@ describe CheckInsRepresenter do
             datetime: created_at_2
           },
           {
+            id: check_in_1.id,
             name: name_1,
             description: description_1,
             latitude: latitude_1,
