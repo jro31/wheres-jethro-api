@@ -5,5 +5,6 @@ FactoryBot.define do
     latitude { 53.43666492 }
     longitude { -2.959829494 }
     accuracy { 12.556 }
+    icon { '🤮' }
   end
 end

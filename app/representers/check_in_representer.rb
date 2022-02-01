@@ -10,6 +10,7 @@ class CheckInRepresenter
       latitude: check_in.latitude,
       longitude: check_in.longitude,
       accuracy: check_in.accuracy,
+      icon: check_in.icon,
       datetime: check_in.created_at
     }
   end
