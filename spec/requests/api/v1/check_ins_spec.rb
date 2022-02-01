@@ -9,14 +9,15 @@ describe 'check_ins API', type: :request do
       let(:latitude_1) { 53.43666492 }
       let(:longitude_1) { -2.959829494 }
       let(:accuracy_1) { 12.556 }
+      let(:icon_1) { '🤮' }
       let(:created_at_1) { 2.days.ago }
-      let!(:check_in_1) { create(:check_in, name: name_1, description: description_1, latitude: latitude_1, longitude: longitude_1, accuracy: accuracy_1, created_at: created_at_1) }
+      let!(:check_in_1) { create(:check_in, name: name_1, description: description_1, latitude: latitude_1, longitude: longitude_1, accuracy: accuracy_1, icon: icon_1, created_at: created_at_1) }
 
       let(:name_2) { 'Bangkok' }
       let(:latitude_2) { 13.7563 }
       let(:longitude_2) { 100.5018 }
       let(:created_at_2) { 1.day.ago }
-      let!(:check_in_2) { create(:check_in, name: name_2, description: nil, latitude: latitude_2, longitude: longitude_2, accuracy: nil, created_at: created_at_2) }
+      let!(:check_in_2) { create(:check_in, name: name_2, description: nil, latitude: latitude_2, longitude: longitude_2, accuracy: nil, icon: nil, created_at: created_at_2) }
       it 'returns the check-ins' do
         get url
 
@@ -29,6 +30,7 @@ describe 'check_ins API', type: :request do
               'latitude' => latitude_2,
               'longitude' => longitude_2,
               'accuracy' => nil,
+              'icon' => nil,
               'datetime' => created_at_2.as_json
             },
             {
@@ -37,6 +39,7 @@ describe 'check_ins API', type: :request do
               'latitude' => latitude_1,
               'longitude' => longitude_1,
               'accuracy' => accuracy_1,
+              'icon' => icon_1,
               'datetime' => created_at_1.as_json
             }
           ]
@@ -62,8 +65,9 @@ describe 'check_ins API', type: :request do
     let(:latitude) { 53.43666492 }
     let(:longitude) { -2.959829494 }
     let(:accuracy) { 12.556 }
+    let(:icon) { '🤮' }
     let(:url) { '/api/v1/check_ins' }
-    let(:params) { { check_in: { name: name, description: description, latitude: latitude, longitude: longitude, accuracy: accuracy } } }
+    let(:params) { { check_in: { name: name, description: description, latitude: latitude, longitude: longitude, accuracy: accuracy, icon: icon } } }
     let(:expected_return) {
       {
         'check_in' => {
@@ -72,6 +76,7 @@ describe 'check_ins API', type: :request do
           'latitude' => latitude,
           'longitude' => longitude,
           'accuracy' => accuracy,
+          'icon' => icon,
           'datetime' => CheckIn.last.created_at.as_json
         }
       }
@@ -88,7 +93,7 @@ describe 'check_ins API', type: :request do
         end
 
         context 'name is not present' do
-          let(:params) { { check_in: { description: description, latitude: latitude, longitude: longitude, accuracy: accuracy } } }
+          let(:params) { { check_in: { description: description, latitude: latitude, longitude: longitude, accuracy: accuracy, icon: icon } } }
           it 'does not create a check-in' do
             expect { post url, params: params }.to change { CheckIn.count }.by(0)
             expect(response).to have_http_status(:unprocessable_entity)
@@ -100,7 +105,7 @@ describe 'check_ins API', type: :request do
 
         context 'description is not present' do
           let(:description) { nil }
-          let(:params) { { check_in: { name: name, latitude: latitude, longitude: longitude, accuracy: accuracy } } }
+          let(:params) { { check_in: { name: name, latitude: latitude, longitude: longitude, accuracy: accuracy, icon: icon } } }
           it 'creates a new check-in' do
             expect { post url, params: params }.to change { CheckIn.count }.by(1)
             expect(response).to have_http_status(:created)
@@ -109,7 +114,7 @@ describe 'check_ins API', type: :request do
         end
 
         context 'latitude is not present' do
-          let(:params) { { check_in: { name: name, description: description, longitude: longitude, accuracy: accuracy } } }
+          let(:params) { { check_in: { name: name, description: description, longitude: longitude, accuracy: accuracy, icon: icon } } }
           it 'does not create a check-in' do
             expect { post url, params: params }.to change { CheckIn.count }.by(0)
             expect(response).to have_http_status(:unprocessable_entity)
@@ -120,7 +125,7 @@ describe 'check_ins API', type: :request do
         end
 
         context 'longitude is not present' do
-          let(:params) { { check_in: { name: name, description: description, latitude: latitude, accuracy: accuracy } } }
+          let(:params) { { check_in: { name: name, description: description, latitude: latitude, accuracy: accuracy, icon: icon } } }
           it 'does not create a check-in' do
             expect { post url, params: params }.to change { CheckIn.count }.by(0)
             expect(response).to have_http_status(:unprocessable_entity)
@@ -132,7 +137,17 @@ describe 'check_ins API', type: :request do
 
         context 'accuracy is not present' do
           let(:accuracy) { nil }
-          let(:params) { { check_in: { name: name, description: description, latitude: latitude, longitude: longitude } } }
+          let(:params) { { check_in: { name: name, description: description, latitude: latitude, longitude: longitude, icon: icon } } }
+          it 'creates a new check-in' do
+            expect { post url, params: params }.to change { CheckIn.count }.by(1)
+            expect(response).to have_http_status(:created)
+            expect(JSON.parse(response.body)).to eq(expected_return)
+          end
+        end
+
+        context 'icon is not present' do
+          let(:icon) { nil }
+          let(:params) { { check_in: { name: name, description: description, latitude: latitude, longitude: longitude, accuracy: accuracy } } }
           it 'creates a new check-in' do
             expect { post url, params: params }.to change { CheckIn.count }.by(1)
             expect(response).to have_http_status(:created)
