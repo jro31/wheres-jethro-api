@@ -6,5 +6,6 @@ FactoryBot.define do
     longitude { -2.959829494 }
     accuracy { 12.556 }
     icon { '🤮' }
+    time_zone { 'Asia/Ujung_Pandang' }
   end
 end

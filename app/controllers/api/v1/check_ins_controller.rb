@@ -43,7 +43,7 @@ module Api
       private
 
       def check_in_params
-        params.require(:check_in).permit(:name, :description, :latitude, :longitude, :accuracy, :icon)
+        params.require(:check_in).permit(:name, :description, :latitude, :longitude, :accuracy, :icon, :time_zone)
       end
     end
   end
