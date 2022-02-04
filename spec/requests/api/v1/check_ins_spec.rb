@@ -58,6 +58,34 @@ describe 'check_ins API', type: :request do
           ]
         })
       end
+
+      context 'limit is passed in the params' do
+        let(:url) { '/api/v1/check_ins?limit=1' }
+        it 'returns the most recent check-in' do
+          get url
+
+          expect(response).to have_http_status(:ok)
+          expect(JSON.parse(response.body)).to eq({
+            'check_ins' => [
+              {
+                'id' => check_in_2.id,
+                'name' => name_2,
+                'description' => nil,
+                'latitude' => latitude_2,
+                'longitude' => longitude_2,
+                'accuracy' => nil,
+                'icon' => nil,
+                'datetime' => created_at_2.as_json,
+                'datetime_humanized' => {
+                  'date' => created_at_2.strftime("#{created_at_2.day.ordinalize} %b '%y"),
+                  'time' => created_at_2.strftime('%H:%M UTC')
+                },
+                'photo_url' => nil
+              }
+            ]
+          })
+        end
+      end
     end
 
     context 'no check-ins exist' do
