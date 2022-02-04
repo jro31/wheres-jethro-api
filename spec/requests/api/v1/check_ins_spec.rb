@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 describe 'check_ins API', type: :request do
+  # TODO - Spec photo upload
   describe 'GET /api/v1/check_ins' do
     let(:url) { '/api/v1/check_ins' }
     context 'check-ins exist' do
