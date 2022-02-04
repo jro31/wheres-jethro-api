@@ -13,7 +13,8 @@ class CheckInRepresenter
       accuracy: check_in.accuracy,
       icon: check_in.icon,
       datetime: check_in.created_at,
-      datetime_humanized: humanize_datetime
+      datetime_humanized: humanize_datetime,
+      photo_url: check_in.photo.url
     }
   end
 

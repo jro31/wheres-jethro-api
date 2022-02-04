@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe 'check_ins API', type: :request do
-  # TODO - Spec photo upload
   describe 'GET /api/v1/check_ins' do
     let(:url) { '/api/v1/check_ins' }
     context 'check-ins exist' do
@@ -38,7 +37,8 @@ describe 'check_ins API', type: :request do
               'datetime_humanized' => {
                 'date' => created_at_2.strftime("#{created_at_2.day.ordinalize} %b '%y"),
                 'time' => created_at_2.strftime('%H:%M UTC')
-              }
+              },
+              'photo_url' => nil
             },
             {
               'id' => check_in_1.id,
@@ -52,7 +52,8 @@ describe 'check_ins API', type: :request do
               'datetime_humanized' => {
                 'date' => created_at_1.in_time_zone(time_zone_1).strftime("#{created_at_1.in_time_zone(time_zone_1).day.ordinalize} %b '%y"),
                 'time' => created_at_1.in_time_zone(time_zone_1).strftime('%H:%M WITA')
-              }
+              },
+              'photo_url' => nil
             }
           ]
         })
@@ -95,7 +96,8 @@ describe 'check_ins API', type: :request do
           'datetime_humanized' => {
             'date' => CheckIn.last.created_at.in_time_zone(time_zone).strftime("#{CheckIn.last.created_at.in_time_zone(time_zone).day.ordinalize} %b '%y"),
             'time' => CheckIn.last.created_at.in_time_zone(time_zone).strftime('%H:%M %Z')
-          }
+          },
+          'photo_url' => nil
         }
       }
     }
@@ -181,6 +183,10 @@ describe 'check_ins API', type: :request do
             expect(response).to have_http_status(:created)
             expect(JSON.parse(response.body)).to eq(expected_return)
           end
+        end
+
+        context 'photo is present' do
+          # TODO
         end
       end
 
