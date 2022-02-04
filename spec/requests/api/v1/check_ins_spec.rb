@@ -86,6 +86,34 @@ describe 'check_ins API', type: :request do
           })
         end
       end
+
+      context 'offset is passed in the params' do
+        let(:url) { '/api/v1/check_ins?offset=1' }
+        it 'returns the second most recent check-in' do
+          get url
+
+          expect(response).to have_http_status(:ok)
+          expect(JSON.parse(response.body)).to eq({
+            'check_ins' => [
+              {
+                'id' => check_in_1.id,
+                'name' => name_1,
+                'description' => description_1,
+                'latitude' => latitude_1,
+                'longitude' => longitude_1,
+                'accuracy' => accuracy_1,
+                'icon' => icon_1,
+                'datetime' => created_at_1.as_json,
+                'datetime_humanized' => {
+                  'date' => created_at_1.in_time_zone(time_zone_1).strftime("#{created_at_1.in_time_zone(time_zone_1).day.ordinalize} %b '%y"),
+                  'time' => created_at_1.in_time_zone(time_zone_1).strftime('%H:%M WITA')
+                },
+                'photo_url' => nil
+              }
+            ]
+          })
+        end
+      end
     end
 
     context 'no check-ins exist' do
