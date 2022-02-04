@@ -5,6 +5,8 @@ module Api
       def index
         begin
           @check_ins = policy_scope(CheckIn).order(created_at: :desc)
+                                            .limit(params[:limit])
+                                            .offset(params[:offset])
           render json: {
             check_ins: CheckInsRepresenter.new(@check_ins).as_json
           }, status: :ok
