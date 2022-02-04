@@ -33,7 +33,8 @@ describe CheckInsRepresenter do
             datetime_humanized: {
               date: created_at_2.strftime("#{created_at_2.day.ordinalize} %b '%y"),
               time: created_at_2.strftime('%H:%M UTC')
-            }
+            },
+            photo_url: nil
           },
           {
             id: check_in_1.id,
@@ -47,7 +48,8 @@ describe CheckInsRepresenter do
             datetime_humanized: {
               date: created_at_1.in_time_zone(time_zone_1).strftime("#{created_at_1.in_time_zone(time_zone_1).day.ordinalize} %b '%y"),
               time: created_at_1.in_time_zone(time_zone_1).strftime('%H:%M WITA')
-            }
+            },
+            photo_url: nil
           }
         ]
       )

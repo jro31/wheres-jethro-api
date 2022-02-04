@@ -4,6 +4,20 @@ describe CheckIn, type: :model do
   subject { create(:check_in) }
   it { expect(subject).to be_valid }
 
+  describe 'associations' do
+    describe 'has_one_attached :photo' do
+      context 'photo is attached' do
+        subject { create(:check_in_with_photo) }
+        it { expect(subject.photo.attached?).to eq(true) }
+      end
+
+      context 'photo is not attached' do
+        subject { create(:check_in_without_photo) }
+        it { expect(subject.photo.attached?).to eq(false) }
+      end
+    end
+  end
+
   describe 'validations' do
     describe 'name' do
       let(:name) { 'Goodison Park' }

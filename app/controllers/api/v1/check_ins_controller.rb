@@ -34,6 +34,7 @@ module Api
             error_message: e.message.split(':')&.last&.strip || 'Something went wrong'
           }, status: :unprocessable_entity
         rescue => e
+          @skip_after_action = true
           render json: {
             error_message: e.message
           }, status: :unprocessable_entity
@@ -43,7 +44,7 @@ module Api
       private
 
       def check_in_params
-        params.require(:check_in).permit(:name, :description, :latitude, :longitude, :accuracy, :icon, :time_zone)
+        params.require(:check_in).permit(:name, :description, :latitude, :longitude, :accuracy, :icon, :time_zone, :photo)
       end
     end
   end
