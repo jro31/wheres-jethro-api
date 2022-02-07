@@ -8,7 +8,7 @@ describe CheckInRepresenter do
   let(:accuracy) { 12.556 }
   let(:icon) { '🤮' }
   let(:time_zone) { 'Asia/Ujung_Pandang' }
-  let(:created_at) { 1.hour.ago }
+  let(:created_at) { 1.hour.ago.beginning_of_minute }
   let!(:check_in) { create(:check_in, name: name, description: description, latitude: latitude, longitude: longitude, accuracy: accuracy, icon: icon, time_zone: time_zone, created_at: created_at) }
   describe 'as_json' do
     subject { CheckInRepresenter.new(check_in).as_json }

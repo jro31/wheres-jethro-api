@@ -10,8 +10,6 @@ env:
   POSTGRES_USER: postgres
   POSTGRES_HOST: localhost
   RAILS_ENV: test
-  S3_BUCKET_REGION: us-east-1
-  S3_BUCKET: test-bucket
 
 name: Ruby
 
