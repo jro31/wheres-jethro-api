@@ -8,13 +8,13 @@ describe CheckInsRepresenter do
   let(:accuracy_1) { 12.556 }
   let(:icon_1) { '🤮' }
   let(:time_zone_1) { 'Asia/Ujung_Pandang' }
-  let(:created_at_1) { 2.days.ago }
+  let(:created_at_1) { 2.days.ago.beginning_of_minute }
   let!(:check_in_1) { create(:check_in, name: name_1, description: description_1, latitude: latitude_1, longitude: longitude_1, accuracy: accuracy_1, icon: icon_1, time_zone: time_zone_1, created_at: created_at_1) }
 
   let(:name_2) { 'Bangkok' }
   let(:latitude_2) { 13.7563 }
   let(:longitude_2) { 100.5018 }
-  let(:created_at_2) { 1.day.ago }
+  let(:created_at_2) { 1.day.ago.beginning_of_minute }
   let!(:check_in_2) { create(:check_in, name: name_2, description: nil, latitude: latitude_2, longitude: longitude_2, accuracy: nil, icon: nil, time_zone: nil, created_at: created_at_2) }
   describe 'as_json' do
     subject { CheckInsRepresenter.new(CheckIn.all.order(created_at: :desc)).as_json }
