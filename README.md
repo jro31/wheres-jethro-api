@@ -1,24 +1,7 @@
-# README
+The Rails API to manage the data for [wheresjethro.com](https://wheresjethro.com/), an app that uses the GPS on a user's device to store "check-ins" and plots them to a map.
+- Ruby 3.1.0
+- Rails 7.0.1
+- Postgres
+- RSpec
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Works in conjunction with [wheres-jethro-front-end](https://github.com/jro31/wheres-jethro-front-end).
